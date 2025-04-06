@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - DataViz Pro</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #4f46e5;
+            --accent-color: #f43f5e;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .page-title {
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .analysis-card {
+            background: var(--card-background);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .analysis-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            background: none;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .visualization-container {
+            background: var(--background-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .visualization-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .visualization-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .visualization-image:hover {
+            transform: scale(1.05);
+        }
+
+        .model-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .download-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.1;
+        }
+
+        .download-btn {
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: var(--primary-color);
+        }
+
+        .download-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Table styles */
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1rem;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        /* ML Feature badges */
+        .ml-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .ml-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Recommendations styling */
+        .recommendations-container {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(79, 70, 229, 0.05));
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .recommendation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Dataset characteristics styling */
+        .metric-card {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            height: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>DataViz Pro
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Analysis Results</h1>
+            <p class="page-subtitle">Your data has been analyzed and visualized. Scroll down to explore the insights.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Data Summary Section -->
+        <div class="analysis-card animate__animated animate__fadeInUp">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-table card-icon"></i>
+                    Data Summary
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if summary %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Statistics</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feature, stats in summary.items() %}
+                                    <tr>
+                                        <td>{{ feature }}</td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                {% for stat, value in stats.items() %}
+                                                    <li><strong>{{ stat }}:</strong> {{ value }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No summary available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- EDA Visualizations Section -->
+        <div class="analysis-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-bar card-icon"></i>
+                    Exploratory Data Analysis
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if eda_plots %}
+                    <div class="row">
+                        {% for plot in eda_plots %}
+                            <div class="col-md-6 mb-4">
+                                <div class="visualization-container">
+                                    <img src="{{ plot }}" alt="EDA Plot" class="visualization-image">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No EDA visualizations available for this dataset.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Correlation Heatmap Section -->
+        <div class="analysis-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-fire card-icon"></i>
+                    Correlation Heatmap
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if heatmap %}
+                    <div class="visualization-container">
+                        <img src="{{ heatmap }}" alt="Correlation Heatmap" class="visualization-image">
+                    </div>
+                {% else %}
+                    <p class="text-muted">Heatmap generation failed or is not applicable to this dataset.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Model Results Section -->
+        <div class="analysis-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-robot card-icon"></i>
+                    Model Performance
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if model_results %}
+                    <!-- Dataset Characteristics -->
+                    {% if characteristics %}
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Dataset Characteristics</h3>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <div class="metric-value">{{ characteristics.n_samples }}</div>
+                                        <div class="metric-label">Samples</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <div class="metric-value">{{ characteristics.n_features }}</div>
+                                        <div class="metric-label">Features</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <div class="metric-value">{{ "%.2f"|format(characteristics.feature_density) }}</div>
+                                        <div class="metric-label">Feature Density</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <div class="metric-value">{{ "%.2f"|format(characteristics.class_balance) }}</div>
+                                        <div class="metric-label">Class Balance</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Model Recommendations -->
+                    {% set first_model = model_results.keys()|list|first %}
+                    {% if model_results[first_model].recommendations %}
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Model Recommendations</h3>
+                            <div class="recommendations-container">
+                                {% for recommendation in model_results[first_model].recommendations %}
+                                    <div class="recommendation-item">
+                                        <i class="fas fa-lightbulb text-warning me-2"></i>
+                                        {{ recommendation }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Model Performance -->
+                    <div class="model-metrics">
+                        {% for model, metrics in model_results.items() %}
+                            <div class="metric-card">
+                                <h3 class="h5 mb-3">{{ model }}</h3>
+                                {% for metric, value in metrics.items() %}
+                                    {% if metric != 'recommendations' %}
+                                        <div class="metric-value">{{ "%.4f"|format(value) }}</div>
+                                        <div class="metric-label">{{ metric }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="mt-3">
+                                    <span class="ml-badge">
+                                        <i class="fas fa-brain me-1"></i>ML Model
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No model results available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Confusion Matrices Section -->
+        <div class="analysis-card animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-th card-icon"></i>
+                    Confusion Matrices
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if confusion_matrices %}
+                    <div class="row">
+                        {% for model, cm_path in confusion_matrices.items() %}
+                            <div class="col-md-6 mb-4">
+                                <div class="visualization-container">
+                                    <h3 class="h5 mb-3">{{ model }}</h3>
+                                    <img src="{{ cm_path }}" alt="Confusion Matrix for {{ model }}" class="visualization-image">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No confusion matrices available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Model Comparison Chart -->
+        <div class="analysis-card animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line card-icon"></i>
+                    Model Comparison
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if comparison_chart %}
+                    <div class="visualization-container">
+                        <img src="{{ comparison_chart }}" alt="Model Comparison Chart" class="visualization-image">
+                    </div>
+                {% else %}
+                    <p class="text-muted">Comparison chart generation failed or is not applicable to this dataset.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Report Section -->
+    <div class="download-section animate__animated animate__fadeInUp" style="animation-delay: 0.7s">
+        <div class="container">
+            <h2 class="mb-4">Download Your Complete Analysis Report</h2>
+            <p class="mb-4">Get a comprehensive PDF report with all your analysis results and visualizations.</p>
+            {% if report_path %}
+                <a href="{{ url_for('download', filename=report_path) }}" class="download-btn">
+                    <i class="fas fa-download me-2"></i>Download PDF Report
+                </a>
+            {% else %}
+                <p class="text-white">Report generation failed.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 DataViz Pro | Powered by Flask & Machine Learning</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

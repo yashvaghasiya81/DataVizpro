@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataViz Pro - Advanced Data Analysis & ML Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #4f46e5;
+            --accent-color: #f43f5e;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 120px 0;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #fff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .feature-card {
+            background: var(--card-background);
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .upload-section {
+            background: var(--card-background);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+            margin-top: 50px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .upload-title {
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 40px;
+            background: var(--background-color);
+            border: 2px dashed var(--primary-color);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .file-input-label:hover::before {
+            opacity: 1;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .upload-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .ml-features {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(79, 70, 229, 0.05));
+            padding: 40px 0;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
+
+        .ml-feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .ml-feature-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .ml-feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .ml-feature-text {
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line text-primary me-2"></i>
+                DataViz Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Interactive Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 animate__animated animate__fadeInLeft">
+                    <h1 class="hero-title">DataViz Pro</h1>
+                    <p class="hero-subtitle">Transform your data into actionable insights with advanced machine learning analysis and stunning visualizations.</p>
+                </div>
+                <div class="col-lg-6 animate__animated animate__fadeInRight">
+                    <img src="https://cdnjs.cloudflare.com/ajax/libs/illustrations/2.0.0/analytics.svg" alt="Data Analysis Illustration" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card animate__animated animate__fadeInUp">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Advanced Visualization</h3>
+                    <p>Create stunning visualizations including distributions, heatmaps, and interactive charts to understand your data better.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>ML Analysis</h3>
+                    <p>Evaluate multiple machine learning models including Random Forest, Logistic Regression, and Support Vector Machines.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>PDF Reports</h3>
+                    <p>Generate comprehensive PDF reports with all your analysis results and visualizations for easy sharing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ML Features Section -->
+        <div class="ml-features animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+            <div class="container">
+                <h2 class="text-center mb-4">Advanced ML Features</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ml-feature-item">
+                            <div class="ml-feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="ml-feature-text">
+                                <h5 class="mb-1">Automated Model Selection</h5>
+                                <p class="mb-0">Intelligent model selection based on dataset characteristics</p>
+                            </div>
+                        </div>
+                        <div class="ml-feature-item">
+                            <div class="ml-feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="ml-feature-text">
+                                <h5 class="mb-1">Performance Metrics</h5>
+                                <p class="mb-0">Comprehensive evaluation metrics for model comparison</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ml-feature-item">
+                            <div class="ml-feature-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="ml-feature-text">
+                                <h5 class="mb-1">Hyperparameter Tuning</h5>
+                                <p class="mb-0">Automatic optimization of model parameters</p>
+                            </div>
+                        </div>
+                        <div class="ml-feature-item">
+                            <div class="ml-feature-icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="ml-feature-text">
+                                <h5 class="mb-1">Feature Importance</h5>
+                                <p class="mb-0">Analysis of feature importance and impact</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section animate__animated animate__fadeInUp" style="animation-delay: 0.8s">
+            <h2 class="upload-title">Start Your Analysis</h2>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="file-input-wrapper">
+                    <input type="file" name="file" id="file" accept=".csv" required>
+                    <label for="file" class="file-input-label">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <p class="mb-0">Drag and drop your CSV file here or click to browse</p>
+                        <small class="text-muted">Supported format: CSV</small>
+                    </label>
+                </div>
+                <button type="submit" class="upload-btn">
+                    <i class="fas fa-upload me-2"></i>Upload and Analyze
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 DataViz Pro | Powered by Flask & Machine Learning</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Add file name display when file is selected
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                document.querySelector('.file-input-label p').textContent = fileName;
+            }
+        });
+
+        // Add drag and drop functionality
+        const dropZone = document.querySelector('.file-input-label');
+        const fileInput = document.getElementById('file');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('bg-light');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('bg-light');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            document.querySelector('.file-input-label p').textContent = files[0].name;
+        }
+    </script>
+</body>
+</html>
